@@ -37,7 +37,8 @@ class Reserva:
 
             # Registro de creación de reserva
             registrar_informacion(
-                f"Reserva creada para {self.cliente.get_nombre()}"
+                f"Reserva creada para "
+                f"{self.cliente.obtener_nombre()}"
             )
 
         except Exception as e:
@@ -76,13 +77,14 @@ class Reserva:
         else:
             # Se registra la operación en el archivo log
             registrar_informacion(
-                f"Reserva realizada para {self.cliente.get_nombre()}"
+                f"Reserva realizada para "
+                f"{self.cliente.obtener_nombre()}"
             )
 
             # Mensaje de confirmación
             return f"""
 Reserva confirmada
-Cliente: {self.cliente.get_nombre()}
+Cliente: {self.cliente.obtener_nombre()}
 Servicio: {self.servicio.descripcion()}
 Costo: {costo}
 Fecha: {self.fecha}
@@ -98,7 +100,7 @@ Fecha: {self.fecha}
     def mostrar_reserva(self):
 
         return f"""
-Cliente: {self.cliente.get_nombre()}
+Cliente: {self.cliente.obtener_nombre()}
 Servicio: {self.servicio.descripcion()}
 Fecha: {self.fecha}
 """
