@@ -13,7 +13,14 @@ from registro import registrar_informacion, registrar_error
 class Reserva:
 
     # Constructor de la clase
-    def __init__(self, cliente, servicio, fecha):
+    def __init__(
+        self,
+        cliente,
+        servicio,
+        fecha,
+        duracion,
+        estado="Pendiente"
+    ):
 
         try:
             # Validación: el cliente debe ser un objeto de tipo Cliente
@@ -30,10 +37,31 @@ class Reserva:
                     "La fecha no puede estar vacía"
                 )
 
+            # Validación: la duración debe ser mayor a 0
+            if duracion <= 0:
+                raise ExcepcionReservaInvalida(
+                    "La duración debe ser mayor a 0"
+                )
+
+            # Estados válidos de la reserva
+            estados_validos = [
+                "Pendiente",
+                "Confirmada",
+                "Cancelada"
+            ]
+
+            # Validación del estado
+            if estado not in estados_validos:
+                raise ExcepcionReservaInvalida(
+                    "Estado de reserva inválido"
+                )
+
             # Atributos de la reserva
             self.cliente = cliente
             self.servicio = servicio
             self.fecha = fecha
+            self.duracion = duracion
+            self.estado = estado
 
             # Registro de creación de reserva
             registrar_informacion(
@@ -61,6 +89,12 @@ class Reserva:
     def confirmar_reserva(self):
 
         try:
+            # Verificación del estado de la reserva
+            if self.estado == "Cancelada":
+                raise ExcepcionReservaInvalida(
+                    "No se puede confirmar una reserva cancelada"
+                )
+
             # Se calcula el costo del servicio
             costo = self.servicio.calcular_costo()
 
@@ -75,6 +109,9 @@ class Reserva:
             ) from e
 
         else:
+            # Cambio de estado de la reserva
+            self.estado = "Confirmada"
+
             # Se registra la operación en el archivo log
             registrar_informacion(
                 f"Reserva realizada para "
@@ -88,12 +125,81 @@ Cliente: {self.cliente.obtener_nombre()}
 Servicio: {self.servicio.descripcion()}
 Costo: {costo}
 Fecha: {self.fecha}
+Duración: {self.duracion}
+Estado: {self.estado}
 """
 
         finally:
             # Registro final del proceso
             registrar_informacion(
                 "Finaliza proceso de confirmación de reserva"
+            )
+
+    # Método para cancelar la reserva
+    def cancelar_reserva(self):
+
+        try:
+            # Verificación del estado actual
+            if self.estado == "Cancelada":
+                raise ExcepcionReservaInvalida(
+                    "La reserva ya fue cancelada"
+                )
+
+        except Exception as e:
+
+            # Registro del error
+            registrar_error("Error al cancelar reserva", e)
+
+            # Encadenamiento de excepción
+            raise ExcepcionReservaInvalida(
+                "No fue posible cancelar la reserva"
+            ) from e
+
+        else:
+            # Cambio de estado
+            self.estado = "Cancelada"
+
+            # Registro en logs
+            registrar_informacion(
+                f"Reserva cancelada para "
+                f"{self.cliente.obtener_nombre()}"
+            )
+
+            return "Reserva cancelada correctamente"
+
+        finally:
+            # Registro final del proceso
+            registrar_informacion(
+                "Finaliza proceso de cancelación"
+            )
+
+    # Método para procesar la reserva
+    def procesar_reserva(self):
+
+        try:
+            # Validación de disponibilidad del servicio
+            if not self.servicio.esta_disponible():
+                raise ExcepcionReservaInvalida(
+                    "El servicio no está disponible"
+                )
+
+        except Exception as e:
+
+            # Registro del error
+            registrar_error("Error al procesar reserva", e)
+
+            raise ExcepcionReservaInvalida(
+                "No fue posible procesar la reserva"
+            ) from e
+
+        else:
+            # Confirmación automática de la reserva
+            return self.confirmar_reserva()
+
+        finally:
+            # Registro final del proceso
+            registrar_informacion(
+                "Finaliza proceso de reserva"
             )
 
     # Método para mostrar información de la reserva
@@ -103,4 +209,6 @@ Fecha: {self.fecha}
 Cliente: {self.cliente.obtener_nombre()}
 Servicio: {self.servicio.descripcion()}
 Fecha: {self.fecha}
+Duración: {self.duracion}
+Estado: {self.estado}
 """
