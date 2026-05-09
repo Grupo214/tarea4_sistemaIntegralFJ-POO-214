@@ -1,0 +1,33 @@
+=== INICIO DEL SISTEMA ===
+Fecha: 08-05-2026 19:05:32
+==================================================
+
+[08-05-2026 19:07:11] INFO: Cliente creado: Laura Medina (laura.medina@gmail.com, 3204567812)
+[08-05-2026 19:07:11] ERROR: Error al crear cliente: Nombre, correo y teléfono son obligatorios | Excepción: ExcepcionClienteInvalido: Nombre, correo y teléfono son obligatorios
+[08-05-2026 19:30:13] INFO: Cliente creado: Laura Medina (laura.medina@gmail.com, 3204567812)
+[08-05-2026 19:30:13] ERROR: Error al crear cliente: Nombre, correo y teléfono son obligatorios | Excepción: ExcepcionClienteInvalido: Nombre, correo y teléfono son obligatorios
+[08-05-2026 19:30:18] INFO: Cliente creado: Laura Medina (laura.medina@gmail.com, 3204567812)
+[08-05-2026 19:30:18] ERROR: Error al crear cliente: Nombre, correo y teléfono son obligatorios | Excepción: ExcepcionClienteInvalido: Nombre, correo y teléfono son obligatorios
+[08-05-2026 19:30:35] INFO: Cliente creado: Laura Medina (laura.medina@gmail.com, 3204567812)
+[08-05-2026 19:30:35] ERROR: Error al crear cliente: Nombre, correo y teléfono son obligatorios | Excepción: ExcepcionClienteInvalido: Nombre, correo y teléfono son obligatorios
+[08-05-2026 20:10:06] INFO: Cliente creado: Laura Medina (laura.medina@gmail.com, 3204567812)
+[08-05-2026 20:10:06] ERROR: Error al crear cliente: Nombre, correo y teléfono son obligatorios | Excepción: ExcepcionClienteInvalido: Nombre, correo y teléfono son obligatorios
+[08-05-2026 20:10:06] INFO: Reserva creada para Laura Medina
+[08-05-2026 20:10:06] INFO: Finaliza proceso de creación de reserva
+[08-05-2026 20:10:06] INFO: Cálculo sala: 200000
+[08-05-2026 20:10:06] INFO: Reserva realizada para Laura Medina
+[08-05-2026 20:10:06] INFO: Finaliza proceso de confirmación de reserva
+[08-05-2026 20:10:06] INFO: Finaliza proceso de reserva
+[08-05-2026 20:10:06] ERROR: Error al crear reserva | Excepción: ExcepcionReservaInvalida: La fecha no puede estar vacía
+[08-05-2026 20:10:06] INFO: Finaliza proceso de creación de reserva
+[08-05-2026 20:10:06] INFO: Reserva creada para Laura Medina
+[08-05-2026 20:10:06] INFO: Finaliza proceso de creación de reserva
+[08-05-2026 20:10:06] ERROR: Error al procesar reserva | Excepción: ExcepcionReservaInvalida: El servicio no está disponible
+[08-05-2026 20:10:06] INFO: Finaliza proceso de reserva
+[08-05-2026 20:10:06] INFO: Cálculo sala: 180000.0
+[08-05-2026 20:10:06] INFO: Cálculo asesoría: 312000.0
+[08-05-2026 20:10:06] INFO: Reserva cancelada para Laura Medina
+[08-05-2026 20:10:06] INFO: Finaliza proceso de cancelación
+[08-05-2026 20:10:06] ERROR: Error al cancelar reserva | Excepción: ExcepcionReservaInvalida: La reserva ya fue cancelada
+[08-05-2026 20:10:06] INFO: Finaliza proceso de cancelación
+[08-05-2026 20:10:06] INFO: La simulación del sistema finalizó correctamente
