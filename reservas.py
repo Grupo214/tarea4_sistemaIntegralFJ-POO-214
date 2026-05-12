@@ -44,6 +44,12 @@ class Reserva:
     def confirmar_reserva(self):
         # Se intenta confirmar la reserva y calcular el costo del servicio
         try:
+            # Verificación del estado de la reserva
+            if self.estado == "Cancelada":
+                raise ExcepcionReservaInvalida(
+                    "No se puede confirmar una reserva cancelada"
+                )
+
             # Se calcula el costo del servicio
             costo = self.servicio.calcular_costo()
 
@@ -76,4 +82,6 @@ fecha: {self.fecha}
 Cliente: {self.cliente.obtener_nombre()}
 Servicio: {self.servicio.descripcion()}
 Fecha: {self.fecha}
-"""
+Duración: {self.duracion}
+Estado: {self.estado}
+""" 
