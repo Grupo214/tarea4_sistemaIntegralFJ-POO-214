@@ -7,8 +7,8 @@ from servicio import (
 )
 from reservas import Reserva
 
-from excepciones import ( 
-# Se importan las excepciones personalizadas del sistema
+from excepciones import (
+    # Se importan las excepciones personalizadas del sistema
     ExcepcionClienteInvalido,
     ExcepcionServicioInvalido,
     ExcepcionReservaInvalida,
@@ -24,7 +24,7 @@ clientes = []
 servicios = []
 reservas = []
 
-print("SOFTWARE FJ\n") # Mensaje inicial del sistema
+print("SOFTWARE FJ\n")  # Mensaje inicial del sistema
 
 
 # OPERACIÓN 1
@@ -37,19 +37,21 @@ try:
         "3204567812"
     )
 
-    
-    clientes.append(cliente1) # Se guarda el cliente en la lista
+    # Se guarda el cliente en la lista
+    clientes.append(cliente1)
 
     print("Cliente registrado correctamente")
     print(cliente1.mostrar_informacion())
 
 except ExcepcionClienteInvalido as e:
 
-    print(f"Error en cliente: {e}") # Se muestra el error si los datos son inválidos
+    # Se muestra el error si los datos son inválidos
+    print(f"Error en cliente: {e}")
 
 finally:
 
-    print("Finaliza operación 1\n") # Mensaje final de la operación
+    # Mensaje final de la operación
+    print("Finaliza operación 1\n")
 
 
 # OPERACIÓN 2
@@ -83,8 +85,8 @@ try:
         4
     )
 
-    
-    servicios.append(sala1) # El servicio se almacena en la lista
+    # El servicio se almacena en la lista
+    servicios.append(sala1)
 
     print("Servicio de sala creado")
     print(sala1.descripcion())
@@ -178,7 +180,8 @@ try:
         4
     )
 
-    reservas.append(reserva1) # La reserva se guarda en la lista
+    # La reserva se guarda en la lista
+    reservas.append(reserva1)
 
     print("Reserva creada correctamente")
     print(reserva1.mostrar_reserva())
@@ -233,7 +236,8 @@ finally:
 # Se intenta procesar una reserva con un servicio no disponible
 try:
 
-    equipo1.cambiar_disponibilidad(False) # El servicio cambia su disponibilidad
+    # El servicio cambia su disponibilidad
+    equipo1.cambiar_disponibilidad(False)
 
     reserva2 = Reserva(
         cliente1,
@@ -323,8 +327,98 @@ finally:
 
     print("Finaliza operación 14\n")
 
-registrar_informacion(     # Se registra el final de la simulación en el archivo log
+
+# OPERACIÓN 15
+# Simulación inválida:
+# Se intenta crear un cliente con caracteres inválidos
+# en el nombre para validar las restricciones del sistema.
+try:
+
+    cliente_error = Cliente(
+        "Laura123",
+        "laura@gmail.com",
+        "3204567890"
+    )
+
+    clientes.append(cliente_error)
+
+    print(cliente_error.mostrar_informacion())
+
+except ExcepcionClienteInvalido as e:
+
+    print(f"Error en cliente: {e}")
+
+finally:
+
+    print("Finaliza operación 15\n")
+
+
+# OPERACIÓN 16
+# Simulación inválida:
+# Se intenta crear una reserva con duración negativa
+# para verificar las validaciones de la clase Reserva.
+try:
+
+    reserva_invalida = Reserva(
+        cliente1,
+        sala1,
+        "25/05/2026",
+        -3
+    )
+
+    reservas.append(reserva_invalida)
+
+    print(reserva_invalida.mostrar_reserva())
+
+except ExcepcionReservaInvalida as e:
+
+    print(f"Error en reserva: {e}")
+
+finally:
+
+    print("Finaliza operación 16\n")
+
+
+# OPERACIÓN 17
+# Simulación inválida:
+# Se intenta calcular el costo de una asesoría
+# utilizando una cantidad de horas inválida.
+try:
+
+    costo_invalido = asesoria1.calcular_costo(horas=-2)
+
+    print(costo_invalido)
+
+except Exception as e:
+
+    print(f"Error en asesoría: {e}")
+
+finally:
+
+    print("Finaliza operación 17\n")
+
+
+# OPERACIÓN 18
+# Simulación inválida:
+# Se intenta cambiar la disponibilidad del servicio
+# usando un valor diferente a booleano.
+try:
+
+    sala1.cambiar_disponibilidad("No disponible")
+
+except Exception as e:
+
+    print(f"Error de disponibilidad: {e}")
+
+finally:
+
+    print("Finaliza operación 18\n")
+
+
+# Registro final de la simulación
+registrar_informacion(
     "La simulación del sistema finalizó correctamente"
 )
 
-print( "FIN DEL SISTEMA") # Mensaje final del sistema
+# Mensaje final del sistema
+print("FIN DEL SISTEMA")
