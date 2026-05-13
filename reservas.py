@@ -11,78 +11,190 @@ from registro import registrar_informacion, registrar_error
 
 # Clase que representa una reserva dentro del sistema
 class Reserva:
+    """
+    Representa una reserva realizada por un cliente para un servicio.
+
+    La clase permite:
+    - Validar los datos de una reserva.
+    - Procesar reservas.
+    - Cancelar reservas.
+    - Mostrar la información almacenada.
+    """
 
     # Constructor de la clase
     def __init__(self, cliente, servicio, fecha, duracion):
+        """
+        Inicializa una nueva reserva con los datos suministrados.
+
+        Args:
+            cliente (Cliente): Cliente asociado a la reserva.
+            servicio (Servicio): Servicio reservado.
+            fecha (str): Fecha programada para la reserva.
+            duracion (int): Duración de la reserva en horas.
+
+        Raises:
+            ExcepcionReservaInvalida:
+                Si alguno de los datos ingresados no es válido.
+        """
+
         try:
-            # Validación: el cliente debe ser un objeto de tipo Cliente
+            # Validación del cliente
             if not isinstance(cliente, Cliente):
-                raise TypeError("El cliente suministrado no es un objeto válido de tipo Cliente")
-            # Validación: el servicio debe ser un objeto de tipo Servicio
+                raise TypeError(
+                    "El cliente suministrado no es un objeto válido de tipo Cliente"
+                )
+
+            # Validación del servicio
             if not isinstance(servicio, Servicio):
-                raise TypeError("El servicio suministrado no es un objeto válido de tipo Servicio")
-            # Validación: la fecha no puede estar vacía
-            if not fecha.strip():
+                raise TypeError(
+                    "El servicio suministrado no es un objeto válido de tipo Servicio"
+                )
+
+            # Validación de la fecha
+            if not isinstance(fecha, str) or not fecha.strip():
                 raise ValueError("La fecha no puede estar vacía")
-            
-            # Validación: la duración debe ser un número entero positivo
-            if not isinstance(duracion, int) or duracion <= 0:
-                raise ValueError("La duración debe ser un número entero positivo"
-                                 )
+
+            # Validación de la duración
+            if not isinstance(duracion, int):
+                raise ValueError(
+                    "La duración debe ser un número entero"
+                )
+
+            if duracion <= 0:
+                raise ValueError(
+                    "La duración debe ser mayor a 0"
+                )
+
         except (TypeError, ValueError) as e:
             registrar_error(f"Error al crear reserva: {str(e)}", e)
-            raise ExcepcionReservaInvalida("Datos de reserva inválidos y/o insuficientes") from e
-            
+
+            raise ExcepcionReservaInvalida(
+                "Datos de reserva inválidos y/o insuficientes"
+            ) from e
+
         else:
-            # Asignación de los atributos de la reserva, solo si son validos
+            # Asignación de atributos
             self.cliente = cliente
             self.servicio = servicio
-            self.fecha = fecha
+            self.fecha = fecha.strip()
             self.estado = "Pendiente"
             self.duracion = duracion
-        # Auditoría: se registra el intento de creación de reserva, independientemente del resultado
+
+            registrar_informacion(
+                f"Reserva creada para {self.cliente.obtener_nombre()}"
+            )
+
         finally:
-            registrar_informacion("Auditoria: Intento de creación de reserva finalizado")
-    
-    # Método para procesar la reserva, con manejo de excepciones para errores durante el cálculo del costo        
+            registrar_informacion(
+                "Auditoría: Intento de creación de reserva finalizado"
+            )
+
+    # Método para procesar la reserva
     def procesar_reserva(self):
-        # Se intenta calcular el costo del servicio, si ocurre un error se registra y se lanza una excepción personalizada
+        """
+        Procesa la reserva y calcula el costo del servicio.
+
+        Returns:
+            str: Mensaje con la información de la reserva confirmada.
+
+        Raises:
+            ExcepcionReservaInvalida:
+                Si ocurre un error durante el procesamiento.
+        """
+
         try:
             costo = self.servicio.calcular_costo()
-            
-        # Si el costo es negativo, se considera un error en la lógica del servicio y se lanza una excepción
+
         except Exception as e:
             registrar_error("Error al procesar reserva", e)
-            raise ExcepcionReservaInvalida("No fue posible realizar la reserva") from e
-        
-        # Si el costo es negativo, se considera un error en la lógica del servicio y se lanza una excepción personalizada
+
+            raise ExcepcionReservaInvalida(
+                "No fue posible realizar la reserva"
+            ) from e
+
         else:
             self.estado = "Confirmada"
-            registrar_informacion(f"Reserva confirmada para {self.cliente.obtener_nombre()} con costo: {costo}")
-            return f"\nReserva Confirmada\nCliente: {self.cliente.obtener_nombre()}\nServicio: {self.servicio.descripcion()}\nDuración: {self.duracion} horas\nEstado: {self.estado}\nCosto Total: {costo}\nFecha: {self.fecha}"
+
+            registrar_informacion(
+                f"Reserva confirmada para "
+                f"{self.cliente.obtener_nombre()} "
+                f"con costo: {costo}"
+            )
+
+            return (
+                f"\nReserva Confirmada\n"
+                f"Cliente: {self.cliente.obtener_nombre()}\n"
+                f"Servicio: {self.servicio.descripcion()}\n"
+                f"Duración: {self.duracion} horas\n"
+                f"Estado: {self.estado}\n"
+                f"Costo Total: {costo}\n"
+                f"Fecha: {self.fecha}"
+            )
+
         finally:
-            print("Auditoria: Proceso de confirmación de reserva finalizado.")
-            
-    # Método para cancelar la reserva, con validación de estado y manejo de excepciones
+            print(
+                "Auditoría: Proceso de confirmación de reserva finalizado."
+            )
+
+    # Método para cancelar la reserva
     def cancelar_reserva(self):
-        # Se valida que la reserva no esté ya cancelada antes de cambiar su estado, si ya está cancelada se lanza una excepción personalizada
+        """
+        Cancela una reserva existente.
+
+        Returns:
+            str: Mensaje de confirmación de cancelación.
+
+        Raises:
+            ExcepcionReservaInvalida:
+                Si la reserva ya se encuentra cancelada.
+        """
+
         try:
             if self.estado == "Cancelada":
-                raise ValueError("La reserva ya se encuentra cancelada.")
-            
-        # Si ocurre un error durante la validación, se registra el error y se lanza una excepción personalizada para indicar que la operación no es permitida
+                raise ValueError(
+                    "La reserva ya se encuentra cancelada."
+                )
+
         except ValueError as e:
-            registrar_error("Error al cancelar: Reserva ya cancelada", e)
-            raise ExcepcionReservaInvalida("Operación no permitida") from e
-        
-        # Si la reserva no está cancelada, se procede a cambiar su estado a "Cancelada" y se registra la información de la cancelación
+            registrar_error(
+                "Error al cancelar: Reserva ya cancelada",
+                e
+            )
+
+            raise ExcepcionReservaInvalida(
+                "Operación no permitida"
+            ) from e
+
         else:
             self.estado = "Cancelada"
-            registrar_informacion(f"Reserva cancelada para {self.cliente.obtener_nombre()}")
-            return f"La reserva para {self.cliente.obtener_nombre()} ha sido cancelada exitosamente."
+
+            registrar_informacion(
+                f"Reserva cancelada para "
+                f"{self.cliente.obtener_nombre()}"
+            )
+
+            return (
+                f"La reserva para "
+                f"{self.cliente.obtener_nombre()} "
+                f"ha sido cancelada exitosamente."
+            )
+
         finally:
-            print("Auditoria: Intento de cancelación procesado.")
+            print("Auditoría: Intento de cancelación procesado.")
 
     # Método para mostrar la información de la reserva
     def mostrar_reserva(self):
-        return f"Cliente: {self.cliente.obtener_nombre()}, Servicio: {self.servicio.descripcion()}, Duración: {self.duracion} horas, Estado: {self.estado}, Fecha: {self.fecha}"
+        """
+        Retorna la información general de la reserva.
+
+        Returns:
+            str: Información completa de la reserva.
+        """
+
+        return (
+            f"Cliente: {self.cliente.obtener_nombre()}, "
+            f"Servicio: {self.servicio.descripcion()}, "
+            f"Duración: {self.duracion} horas, "
+            f"Estado: {self.estado}, "
+            f"Fecha: {self.fecha}"
+        )
